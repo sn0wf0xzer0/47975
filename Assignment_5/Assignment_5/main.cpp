@@ -4,7 +4,8 @@
 
 
 #include "IntArray.h"
-#include <string>
+#include "Date.h"
+//#include <string>
 #include <iostream>
 using namespace std;
 
@@ -39,7 +40,7 @@ int main(int argv,char *argc[]){
 void Menu(){
     cout<<"Menu for Assignment 5"<<endl;
 	cout<<"Type 1 for problem 1: Gaddis Chapter 16, #6"<<endl;
-    cout<<"Type 2 for problem 2: Gaddis Chapter 16, #"<<endl;
+    cout<<"Type 2 for problem 2: Gaddis Chapter 16, #1"<<endl;
     cout<<"Type 3 for problem 3: Gaddis Chapter 16, #"<<endl;
     cout<<"Type 4 for problem 4: Gaddis Chapter 16, #"<<endl;
     cout<<"Type anything else to exit \n"<<endl;
@@ -156,7 +157,48 @@ void dispSubMenu1()
 }
 
 void problem2(){
-        cout<<"In problem # 2"<<endl<<endl;
+	cout<<"In problem # 2: Gaddis Chapter 16, #1"<<endl<<endl;
+	bool goodDate = false;
+	string reply;
+	int y;
+	int m;
+	int d;
+
+	cout << "This option test drives a class which handles date\n"
+		<< "storage and display in three formats. If an invalid\n"
+		<< "day or month are entered; the object should throw an\n"
+		<< "exception. Please follow the prompts as they appear,\n"
+		<< "thank you.\n";
+	do{
+		do{
+			cout << "Please enter an integral year: ";
+			cin >> y;
+			cout << "Please enter an integral month: ";
+			cin >> m;
+			cout << "Please enter an integral day: ";
+			cin >> d;
+			try {
+				Date userDate(d, m, y);
+				cout << "Numerical date format: ";
+				userDate.dispNumDate();
+				cout << "Month first format: ";
+				userDate.dispMonDate();
+				cout << "Day first format: ";
+				userDate.dispDayDate();
+			}
+			catch(Date::InvalidDay){
+				cout << "The day entered was not valid.\n";
+			}
+			catch(Date::InvalidMonth){
+				cout << "The month entered was not valid.\n";
+			}
+			goodDate = true;
+		} while (goodDate = false);
+		cout << "Would you like to run this test again?\n"
+			<< "Type anything starting with y to run again.\n";
+			cin.ignore();
+		getline(cin, reply);
+	} while (tolower(reply[0]) == 'y');
 }
 
 void problem3(){

@@ -1,6 +1,5 @@
 //Modified IntArray class implementation file: no longer exits program.
 #include "IntArray.h"
-using namespace std;
 
 IntArray::IntArray(int s)
 {
