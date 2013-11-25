@@ -196,6 +196,10 @@
 				RelativePath=".\IntArray.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SimpleVector.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
