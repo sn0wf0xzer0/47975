@@ -22,7 +22,7 @@ template <class T>
 void dispValue1(SimpleVector<T>);
 void dispSubMenu2();
 template <class T>
-void mutateSeq(SimpleVector<T>);
+void mutateSeq(SimpleVector<T> &);
 bool validateComm1(string);
 void problem4();
 
@@ -294,7 +294,7 @@ void dispValue1(SimpleVector<T> sequence)
 }
 
 template <class T>
-void mutateSeq(SimpleVector<T> sequence)
+void mutateSeq(SimpleVector<T> &sequence)
 {
 	string command;
 	T val;
@@ -312,7 +312,6 @@ void mutateSeq(SimpleVector<T> sequence)
 			cout << "Please enter the value you would like to push_back.\n";
 			cin >> val;
 			sequence.push_back(val);
-			cin.ignore();
 			break;
 		case 'd':
 			cout << "You typed [" << command << "] to return to main menue.\n";
