@@ -5,7 +5,7 @@
 
 #include "IntArray.h"
 #include "Date.h"
-#include "SimpleVector.h"
+#include "SearchableVector.h"
 #include <iostream>
 using namespace std;
 
@@ -347,6 +347,9 @@ bool validateComm1(string comm)
 
 void problem4(){
         cout<<"In problem # 4"<<endl<<endl;
+
+		cout << "This option tests an object of class SearchableVector.\n"
+			<< "Please follow the prompts as they appear, thank you.\n";
 }
 
 void def(int inN){

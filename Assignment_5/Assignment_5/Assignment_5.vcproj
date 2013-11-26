@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SearchableVector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SimpleVector.h"
 				>
 			</File>
