@@ -116,7 +116,7 @@ T &SimpleVector<T>::operator[](const int &sub)
 template <class T>
 void SimpleVector<T>::push_back(T val)
 {
-	if(arraySize == maxSize){
+	if(arraySize++ == maxSize){
 	T *temp;
 
 	temp = new T [arraySize];
@@ -127,42 +127,25 @@ void SimpleVector<T>::push_back(T val)
 	
 	delete [] aptr;
 	
-	arraySize++;
 	maxSize *= 2;
 
 	aptr = new T [maxSize];
 	for(int i = 0; i < arraySize - 1; i++){
 		*(aptr + i) = *(temp + i);
 	}
-	aptr[arraySize - 2] = val;
+	aptr[arraySize - 1] = val;
 
 	delete [] temp;
 	}
-	else
+	else{
 		aptr[arraySize - 1] = val;
+	}
 }
 
 template <class T>
 void SimpleVector<T>::pop_back()
 {
-	/*T *temp;*/
-	
 	--arraySize;
-
-	//temp = new T [arraySize];
-
-	//for(int i = 0; i < arraySize; i++){
-	//	*(temp + i) = *(aptr + i);
-	//}
-	//
-	//delete [] aptr;
-
-	//aptr = new T [arraySize];
-	//for(int i = 0; i < arraySize; i++){
-	//	*(aptr + i) = *(temp + i);
-	//}
-
-	//delete [] temp;
 }
 
 #endif /* SIMPLEVECTOR_H */ 

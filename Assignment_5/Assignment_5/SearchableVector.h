@@ -6,27 +6,23 @@ template <class T>
 class SearchableVector : public SimpleVector<T>
 {
 private:
+	//creates a copy of SimpleVector::aptr
 	T *copyArray();
+	//Sorts array to facilitate binary search.
 	T *sortArray();
 public:
-   // Default constructor
+   //Just using base class constructor.
    SearchableVector() : SimpleVector<T>()
       {}
-   
-   // Constructor
+   //Just passing the size to the base class constructor.
    SearchableVector(int size) : SimpleVector<T>(size)
       { }
-   
-   // Copy constructor
+   //Copy constructor
    SearchableVector(const SearchableVector &);
 
-   // Accessor to find an item
+   //find item using binary search, returns -1 when unsuccessful.
    int findItem(const T);
 };
-
-//*******************************************************
-// Copy constructor                                     *
-//*******************************************************
 
 template <class T>
 SearchableVector<T>::SearchableVector(const SearchableVector &obj) :
@@ -35,12 +31,6 @@ SearchableVector<T>::SearchableVector(const SearchableVector &obj) :
    for(int count = 0; count < this->size(); count++)
       this->operator[](count) = obj[count];
 }
-
-//*******************************************************
-// findItem function                                    *
-// This function searches for item. If item is found    *
-// the subscript is returned. Otherwise -1 is returned. *
-//*******************************************************
 
 template <class T>
 int SearchableVector<T>::findItem(const T item)
@@ -75,8 +65,8 @@ T *SearchableVector<T>::copyArray()
 	T *copy;
 	copy = new T [this->size()];
 	
-	for(int i = 0; i < this->arraySize; i++){
-		*(copy + i) = this->aptr[i];
+	for(int i = 0; i < this->size(); i++){
+		*(copy + i) = this->operator [](i);
 	}
 
 	return copy;
