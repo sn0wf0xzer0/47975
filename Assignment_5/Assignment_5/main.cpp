@@ -25,6 +25,10 @@ template <class T>
 void mutateSeq(SimpleVector<T> &);
 bool validateComm1(string);
 void problem4();
+template <class T>
+void dispValue1(SearchableVector<T>);
+template <class T>
+void mutateSeq(SearchableVector<T> &);
 
 int main(int argv,char *argc[]){
     int inN;
@@ -46,7 +50,7 @@ void Menu(){
 	cout<<"Type 1 for problem 1: Gaddis Chapter 16, #6"<<endl;
     cout<<"Type 2 for problem 2: Gaddis Chapter 16, #1"<<endl;
     cout<<"Type 3 for problem 3: Gaddis Chapter 16, #8"<<endl;
-    cout<<"Type 4 for problem 4: Gaddis Chapter 16, #"<<endl;
+    cout<<"Type 4 for problem 4: Gaddis Chapter 16, #9"<<endl;
     cout<<"Type anything else to exit \n"<<endl;
 }
 
@@ -346,10 +350,140 @@ bool validateComm1(string comm)
 }
 
 void problem4(){
-        cout<<"In problem # 4"<<endl<<endl;
+        cout<<"In problem # 4: Gaddis Chapter 16, #9"<<endl<<endl;
+		/*int num;
+		bool goodNum = true;
+		string reply;*/
 
 		cout << "This option tests an object of class SearchableVector.\n"
 			<< "Please follow the prompts as they appear, thank you.\n";
+		SearchableVector<int> vect(10);
+		for(int i = 0; i < 10; i++){
+			if(i == 0 || i == 1){
+				vect[i] = 1;
+			}
+			else
+				vect[i] = vect[i - 1] + vect[i - 2];
+		}
+		for(int i = 0; i < vect.size(); i++){
+		cout << vect[i] << " ";
+	}
+
+	cout << "Now to pop off the last term of the sequence.\n";
+	vect.pop_back();
+	cout << "This is what you're sequence looks like now!\n";
+	for(int i = 0; i < vect.size(); i++){
+		cout << vect[i] << " ";
+	}
+	cout << "If that worked, let's push something on to the end...\n"
+		<< "How about -1?\n";
+	vect.push_back(-1);
+	for(int i = 0; i < vect.size(); i++){
+		cout << vect[i] << " ";
+	}
+		//cout << "How many elements would you like to generate?\n";
+		//
+		////Set up the SearchableVector object.
+		//do{
+		//	cin >> num;
+		//	if(num < 0){
+		//		cout << "Please enter a value greater than zero.\n";
+		//		goodNum = false;
+		//	}
+		//} while (goodNum == false);
+
+		////Initialize internal array with a recursively defined sequence.
+		//SearchableVector<int> list(num);
+		//for(int i = 0; i < num; i++){
+		//	if(i == 0 || i == 1){
+		//		list[i] = 1;
+		//	}
+		//	else
+		//		list[i] = list[i - 1] + list[i - 2];
+		//}
+		//
+		//do{
+		//cout << "There are now " << list.size() << " integral values in your sequence.\n";
+
+		////Give the user the oprotunity to cause an exception to be thrown and recover.
+		//dispValue1(list);
+		////now to test pop_back and push_back.
+		//mutateSeq(list);
+		//cout << "Would you like to return to the main menu?\n"
+		//	<< "Type anything starting with y to return to main menu.\n";
+		//getline(cin, reply);
+		//} while (tolower(reply[0]) != 'y');
+}
+
+template <class T>
+void dispValue1(SearchableVector<T> sequence)
+{
+	int pos = 0;
+	string command;
+	char beep = 7;
+	cin.ignore();
+
+	do{
+		try{
+			cout << "Value at " << pos + 1 << " is: " << sequence[pos] << endl;
+		}
+		catch (SearchableVector<T>::OutOfBounds err)
+		{
+			if(err.getDir()){
+				cout << beep << "There are no more entries this way, please type [back] to see\n"
+					<< "next entry or [done] if done.\n";
+			}
+			else{
+				cout << beep << "There are no more entries this way, please type [next] to see\n"
+					<< "next entry or [done] if done.\n";
+			}
+				
+		}
+		do{
+			dispSubMenu1();
+			getline(cin, command);
+		} while (validateComm(command) == false);
+
+		if(tolower(command[0]) == 'n'){
+				pos++;
+		}
+
+		if(tolower(command[0]) == 'b'){
+				pos--;
+		}
+
+		if(tolower(command[0]) == 'd'){
+			cout << "You typed [" << command << "] to return to main menue.\n";
+		} 
+	}while (tolower(command[0]) != 'd');
+}
+
+template <class T>
+void mutateSeq(SearchableVector<T> &sequence)
+{
+	string command;
+	T val;
+	do{
+		do{
+			dispSubMenu2();
+			getline(cin, command);
+		} while (validateComm1(command) == false);
+
+		switch(tolower(command[0])){
+		case 'r':
+			sequence.pop_back();
+			break;
+		case 'a':
+			cout << "Please enter the value you would like to push_back.\n";
+			cin >> val;
+			sequence.push_back(val);
+			break;
+		case 'd':
+			cout << "You typed [" << command << "] to return to main menue.\n";
+			break;
+		}
+	} while (tolower(command[0]) != 'd');
+
 }
 
 void def(int inN){

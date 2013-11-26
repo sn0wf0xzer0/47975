@@ -8,8 +8,9 @@ template <class T>
 class SimpleVector
 {
 private:
-   T *aptr;          //points to allocated array of T type
-   int arraySize;    //Number of elements in the array
+   T *aptr;         //points to allocated array of T type
+   int arraySize;   //Number of elements in the array
+   int maxSize;		//Total Maximum number of elements available.
 
 public:
    SimpleVector()
@@ -46,6 +47,7 @@ template <class T>
 SimpleVector<T>::SimpleVector(int s)
 {
    arraySize = s;
+   maxSize = s;
    //Attempt to allocate mem.
    try
    {
@@ -114,6 +116,7 @@ T &SimpleVector<T>::operator[](const int &sub)
 template <class T>
 void SimpleVector<T>::push_back(T val)
 {
+	if(arraySize == maxSize){
 	T *temp;
 
 	temp = new T [arraySize];
@@ -123,38 +126,43 @@ void SimpleVector<T>::push_back(T val)
 	}
 	
 	delete [] aptr;
-
+	
 	arraySize++;
-	aptr = new T [arraySize];
+	maxSize *= 2;
+
+	aptr = new T [maxSize];
 	for(int i = 0; i < arraySize - 1; i++){
 		*(aptr + i) = *(temp + i);
 	}
-	aptr[arraySize - 1] = val;
+	aptr[arraySize - 2] = val;
 
 	delete [] temp;
+	}
+	else
+		aptr[arraySize - 1] = val;
 }
 
 template <class T>
 void SimpleVector<T>::pop_back()
 {
-	T *temp;
+	/*T *temp;*/
 	
-	arraySize--;
+	--arraySize;
 
-	temp = new T [arraySize];
+	//temp = new T [arraySize];
 
-	for(int i = 0; i < arraySize; i++){
-		*(temp + i) = *(aptr + i);
-	}
-	
-	delete [] aptr;
+	//for(int i = 0; i < arraySize; i++){
+	//	*(temp + i) = *(aptr + i);
+	//}
+	//
+	//delete [] aptr;
 
-	aptr = new T [arraySize];
-	for(int i = 0; i < arraySize; i++){
-		*(aptr + i) = *(temp + i);
-	}
+	//aptr = new T [arraySize];
+	//for(int i = 0; i < arraySize; i++){
+	//	*(aptr + i) = *(temp + i);
+	//}
 
-	delete [] temp;
+	//delete [] temp;
 }
 
 #endif /* SIMPLEVECTOR_H */ 
