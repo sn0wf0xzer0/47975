@@ -4,39 +4,62 @@
 
 #include "Board.h"
 #include "Space.h"
+#include "SearchableVector.h"
 #include <iostream>
 using namespace std;
 
 Board::Board()
 {
 	int ch = 55;  //Interger base to assigned count character.
-
-	//Default board is 3*3
-	root = 3;						
+	root = 3;
 	numSpaces = root * root;
-	//creat rows of space objects.
-	spaces = new Space* [root];		
-						
-	for(int i = 0; i < root; i++)
-	{
-		//creat collumns of space objects.
-		spaces[i] = new Space[root];	
-	}
-
-	for(int i = 0; i < root; i++)
-	{
-		for(int j = 0; j < root; j++)
-		{
-			//Set spaces to thier respective positions
-			//in the game field based on standard
-			//num pad configuration.
-			ch -= i * root;
-			ch += j;
-			spaces[i][j].flipSpace(ch);
-			//Reset char base.
-			ch = 55;						
+		//Now to try some slightly dark arts...
+	spaces = new SearchableVector<Space> [root];
+	for(int i = 0; i < root; i++){
+		spaces[i] = SearchableVector<Space>(root);
+		for(int j = 0; j < root; j++){
+			spaces[i].pop_back();
 		}
 	}
+	for(int i = 0; i < root; i++){
+		for(int j = 0; j < root; j++){
+			spaces[i].push_back(Space(' '));
+		}
+	}
+	for(int i = 0; i < root; i++){
+		for(int j = 0; j < root; j++){
+			ch -= i * root;
+			ch += j;
+		spaces[i].operator[](j).flipSpace(ch);
+		ch = 55;
+		}
+	}
+	//Default board is 3*3
+							
+	
+	//creat rows of space objects.
+	//spaces = new Space* [root];		
+	//					
+	//for(int i = 0; i < root; i++)
+	//{
+	//	//creat collumns of space objects.
+	//	spaces[i] = new Space[root];	
+	//}
+
+	//for(int i = 0; i < root; i++)
+	//{
+	//	for(int j = 0; j < root; j++)
+	//	{
+	//		//Set spaces to thier respective positions
+	//		//in the game field based on standard
+	//		//num pad configuration.
+	//		ch -= i * root;
+	//		ch += j;
+	//		spaces[i][j].flipSpace(ch);
+	//		//Reset char base.
+	//		ch = 55;						
+	//	}
+	//}
 }
 
 Board::Board(int base)
@@ -44,40 +67,63 @@ Board::Board(int base)
 	int ch = 55;  //Interger base to assigned count character.
 
 	//Default board is 3*3
-	root = base;						
+	root = base;
 	numSpaces = root * root;
-	//creat rows of space objects.
-	spaces = new Space* [root];		
-						
-	for(int i = 0; i < root; i++)
-	{
-		//creat collumns of space objects.
-		spaces[i] = new Space[root];	
-	}
-
-	for(int i = 0; i < root; i++)
-	{
-		for(int j = 0; j < root; j++)
-		{
-			//Set spaces to thier respective positions
-			//in the game field based on standard
-			//num pad configuration.
-			ch -= i * root;
-			ch += j;
-			spaces[i][j].flipSpace(ch);
-			//Reset char base.
-			ch = 55;						
+		//Now to try some slightly dark arts...
+	spaces = new SearchableVector<Space> [root];
+	for(int i = 0; i < root; i++){
+		spaces[i] = SearchableVector<Space>(root);
+		for(int j = 0; j < root; j++){
+			spaces[i].pop_back();
 		}
 	}
+	//for(int i = 0; i < root; i++){
+	//	for(int j = 0; j < root; j++){
+	//		spaces[i].push_back(Space(' '));
+	//	}
+	//}
+	for(int i = 0; i < root; i++){
+		for(int j = 0; j < root; j++){
+			ch -= i * root;
+			ch += j;
+			spaces[i].push_back(Space(ch));
+		//spaces[i][j].flipSpace(ch);
+		ch = 55;
+		}
+	}
+
+	//creat rows of space objects.
+	//spaces = new Space* [root];		
+	//					
+	//for(int i = 0; i < root; i++)
+	//{
+	//	//creat collumns of space objects.
+	//	spaces[i] = new Space[root];	
+	//}
+
+	//for(int i = 0; i < root; i++)
+	//{
+	//	for(int j = 0; j < root; j++)
+	//	{
+	//		//Set spaces to thier respective positions
+	//		//in the game field based on standard
+	//		//num pad configuration.
+	//		ch -= i * root;
+	//		ch += j;
+	//		spaces[i][j].flipSpace(ch);
+	//		//Reset char base.
+	//		ch = 55;						
+	//	}
+	//}
 }
 
 Board::~Board()
 {
-	for(int i = 0; i < root; i++)
-	{
-	delete [] spaces[i];
+	for(int i = 0; i < root; i++){
+		for(int j = 0; j < spaces[i].size(); j++){
+			spaces[i].operator [](j).~Space();
+		}
 	}
-
 	delete [] spaces;
 }
 
@@ -100,7 +146,8 @@ void Board::flipSpace(int pos, char token)
 		i = 2;
 		j = pos - 1;
 	}
-	spaces[i][j].flipSpace(token);
+	spaces[i].operator[](j).flipSpace(token);
+	//spaces[i][j].flipSpace(token);
 }
 
 void Board::showBoard()

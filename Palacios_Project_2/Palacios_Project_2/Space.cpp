@@ -13,6 +13,7 @@ Space::Space(char pos)
 
 Space::~Space()
 {
+
 }
 
 void Space::setSpace(char num)

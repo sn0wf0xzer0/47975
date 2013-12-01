@@ -22,7 +22,7 @@ public:
       { }
    //Copy constructor
    SearchableVector(const SearchableVector &);
-
+   
    //find item using binary search, returns -1 when unsuccessful.
    int findItem(const T);
 };
