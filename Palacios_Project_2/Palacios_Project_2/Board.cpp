@@ -39,6 +39,38 @@ Board::Board()
 	}
 }
 
+Board::Board(int base)
+{
+	int ch = 55;  //Interger base to assigned count character.
+
+	//Default board is 3*3
+	root = base;						
+	numSpaces = root * root;
+	//creat rows of space objects.
+	spaces = new Space* [root];		
+						
+	for(int i = 0; i < root; i++)
+	{
+		//creat collumns of space objects.
+		spaces[i] = new Space[root];	
+	}
+
+	for(int i = 0; i < root; i++)
+	{
+		for(int j = 0; j < root; j++)
+		{
+			//Set spaces to thier respective positions
+			//in the game field based on standard
+			//num pad configuration.
+			ch -= i * root;
+			ch += j;
+			spaces[i][j].flipSpace(ch);
+			//Reset char base.
+			ch = 55;						
+		}
+	}
+}
+
 Board::~Board()
 {
 	for(int i = 0; i < root; i++)
@@ -53,17 +85,17 @@ void Board::flipSpace(int pos, char token)
 {
 	int i;
 	int j;
-	if(pos >= numSpaces - 2 && pos <= numSpaces)
+	if(pos >= numSpaces - (root - 1) && pos <= numSpaces)
 	{
 		i = 0;
 		j = pos - 7;
 	}
-	if(pos >= numSpaces - 5 && pos <= numSpaces - root)
+	if(pos >= numSpaces - (2 * root -1)  && pos <= numSpaces - root)
 	{
 		i = 1;
 		j = pos - 4;
 	}
-	if(pos >= numSpaces - 8 && pos <= numSpaces - (root*2))
+	if(pos >= numSpaces - (3 * root -1) && pos <= numSpaces - (root*2))
 	{
 		i = 2;
 		j = pos - 1;

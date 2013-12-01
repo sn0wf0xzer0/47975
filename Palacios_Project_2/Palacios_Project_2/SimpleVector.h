@@ -35,13 +35,15 @@ public:
 		{ return upper; }
 	};
    int size() const
-      { return arraySize; }
+   { return arraySize; }
    //Returns value of element at position.
    T getElementAt(int position);
    // Overloaded [] operator.
    T &operator[](const int &);
+   int getMax() const
+   { return maxSize; }
    void push_back(T);
-   void pop_back();					//<-- maybe I should return something like ruby does with the .pop method...
+   T pop_back();
 };
 
 template <class T>
@@ -118,6 +120,19 @@ template <class T>
 void SimpleVector<T>::push_back(T val)
 {
 	if(arraySize++ == maxSize){
+		maxSize *= 2;
+		T *temp = new T [maxSize];
+
+		for(int i = 0; i < arraySize - 1; i++){
+		*(temp + i) = *(aptr + i);
+	}
+		delete [] aptr;
+		temp[arraySize - 1] = val;
+		aptr = &temp;
+	}
+	else
+		aptr[arraySize - 1] = val;
+	/*if(arraySize++ == maxSize){
 	T *temp;
 
 	temp = new T [arraySize];
@@ -140,13 +155,14 @@ void SimpleVector<T>::push_back(T val)
 	}
 	else{
 		aptr[arraySize - 1] = val;
-	}
+	}*/
 }
 
 template <class T>
-void SimpleVector<T>::pop_back()
+T SimpleVector<T>::pop_back()
 {
-	--arraySize;
+	arraySize--;
+	return aptr[arraySize - 1];
 }
 
 #endif /* SIMPLEVECTOR_H */ 

@@ -16,7 +16,7 @@ private:
 public:
    //Just using base class constructor.
    SearchableVector() : SimpleVector<T>()
-      {}
+      { }
    //Just passing the size to the base class constructor.
    SearchableVector(int size) : SimpleVector<T>(size)
       { }

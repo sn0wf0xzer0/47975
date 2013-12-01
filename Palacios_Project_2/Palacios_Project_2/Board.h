@@ -19,6 +19,8 @@ protected:
 public:
 	Board();						
 	//Default constructor.
+	Board(int);
+	//Constructor for different sized boards.
 	~Board();						
 	//Destructor.
 	int getRoot() const				
