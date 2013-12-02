@@ -13,17 +13,10 @@ Board::Board()
 	int ch = 55;  //Interger base to assigned count character.
 	root = 3;
 	numSpaces = root * root;
-		//Now to try some slightly dark arts...
 	spaces = new SearchableVector<Space> [root];
 	for(int i = 0; i < root; i++){
-		spaces[i] = SearchableVector<Space>(root);
 		for(int j = 0; j < root; j++){
-			spaces[i].pop_back();
-		}
-	}
-	for(int i = 0; i < root; i++){
-		for(int j = 0; j < root; j++){
-			spaces[i].push_back(Space(' '));
+			spaces[i].push_back(Space());
 		}
 	}
 	for(int i = 0; i < root; i++){
@@ -69,14 +62,7 @@ Board::Board(int base)
 	//Default board is 3*3
 	root = base;
 	numSpaces = root * root;
-		//Now to try some slightly dark arts...
-	spaces = new SearchableVector<Space> [root];
-	for(int i = 0; i < root; i++){
-		spaces[i] = SearchableVector<Space>(root);
-		for(int j = 0; j < root; j++){
-			spaces[i].pop_back();
-		}
-	}
+	spaces = new SearchableVector<Space>[root];
 	//for(int i = 0; i < root; i++){
 	//	for(int j = 0; j < root; j++){
 	//		spaces[i].push_back(Space(' '));
@@ -119,11 +105,6 @@ Board::Board(int base)
 
 Board::~Board()
 {
-	for(int i = 0; i < root; i++){
-		for(int j = 0; j < spaces[i].size(); j++){
-			spaces[i].operator [](j).~Space();
-		}
-	}
 	delete [] spaces;
 }
 

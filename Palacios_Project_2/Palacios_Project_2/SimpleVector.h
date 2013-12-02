@@ -2,6 +2,7 @@
 // SimpleVector class template
 #ifndef SIMPLEVECTOR_H
 #define SIMPLEVECTOR_H
+
 #include <new>       //Needed for bad_alloc exception
 using namespace std;
 
@@ -15,11 +16,11 @@ private:
 
 public:
    SimpleVector()
-      { aptr = 0; arraySize = 0;}
+      { aptr = 0; arraySize = 0, maxSize = 0;}
    SimpleVector(int);
    //Copy constructor.
    SimpleVector(const SimpleVector &);
-   ~SimpleVector();
+   //~SimpleVector();  <--Must find some way to safely handle self de-alocation with Space objects in tow.
    //Memory allocation exception class.
    class AllocError
    { };
@@ -63,8 +64,8 @@ SimpleVector<T>::SimpleVector(int s)
    }
 
    //Initialize the array with something boring but safe.
-   for (int count = 0; count < arraySize; count++)
-      *(aptr + count) = 0;
+   //for (int count = 0; count < arraySize; count++)
+   //   *(aptr + count) = 0;
 }
 
 template <class T>
@@ -81,12 +82,12 @@ SimpleVector<T>::SimpleVector(const SimpleVector &obj)
       *(aptr + count) = *(obj.aptr + count);
 }
 
-template <class T>
-SimpleVector<T>::~SimpleVector()
-{
-   if (arraySize > 0)
-      delete [] aptr;
-}
+//template <class T>
+//SimpleVector<T>::~SimpleVector()
+//{
+//   if (arraySize > 0)
+//      delete [] aptr;
+//}
 
 template <class T>
 T SimpleVector<T>::getElementAt(int sub)
@@ -132,7 +133,12 @@ void SimpleVector<T>::push_back(T val)
 	//}
 	//else
 	//	aptr[arraySize - 1] = val;
-	if(arraySize++ == maxSize){
+	if(arraySize++ == 0){
+		aptr = new T;
+		aptr[0] = val;
+			maxSize = 1;
+	}
+	else if(arraySize == maxSize){
 	T *temp;
 
 	temp = new T [arraySize];
