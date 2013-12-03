@@ -1,5 +1,4 @@
-//Basis for the new and improved field member in class Board.
-//TODO: rewrite so as to work well with an array of space objects.
+//
 
 #ifndef SEARCHABLEVECTOR_H
 #define SEARCHABLEVECTOR_H

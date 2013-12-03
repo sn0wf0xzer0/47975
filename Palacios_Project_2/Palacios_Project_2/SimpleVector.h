@@ -1,4 +1,4 @@
-//TODO: Make sure that the push and pop f(x) are neat and all members work with the space class.
+//TODO: reintroduce linear search function, perhaps return a pointer when found.
 // SimpleVector class template
 #ifndef SIMPLEVECTOR_H
 #define SIMPLEVECTOR_H
@@ -20,7 +20,6 @@ public:
    SimpleVector(int);
    //Copy constructor.
    SimpleVector(const SimpleVector &);
-   //~SimpleVector();  <--Must find some way to safely handle self de-alocation with Space objects in tow.
    //Memory allocation exception class.
    class AllocError
    { };
@@ -41,9 +40,14 @@ public:
    T getElementAt(int position);
    // Overloaded [] operator.
    T &operator[](const int &);
+   //Returns the actuall number of available elements.
    int getMax() const
    { return maxSize; }
+   //adds object to end of array, allocating more memory
+   //if necessary.
    void push_back(T);
+   //Decrements the size of the array, returning
+   //The last element.
    T pop_back();
 };
 
@@ -62,10 +66,6 @@ SimpleVector<T>::SimpleVector(int s)
 	   //If fail, tell the program.
       throw AllocError();
    }
-
-   //Initialize the array with something boring but safe.
-   //for (int count = 0; count < arraySize; count++)
-   //   *(aptr + count) = 0;
 }
 
 template <class T>
@@ -82,13 +82,6 @@ SimpleVector<T>::SimpleVector(const SimpleVector &obj)
       *(aptr + count) = *(obj.aptr + count);
 }
 
-//template <class T>
-//SimpleVector<T>::~SimpleVector()
-//{
-//   if (arraySize > 0)
-//      delete [] aptr;
-//}
-
 template <class T>
 T SimpleVector<T>::getElementAt(int sub)
 {
@@ -97,9 +90,12 @@ T SimpleVector<T>::getElementAt(int sub)
 	//Program.
    if (sub < 0)
       throw OutOfBounds(false);
-   if(sub >= arraySize)
+   if(sub >= arraySize){
+	   //This gives the program better understanding
+	   //Of what is happening and allows for finer
+	   //handling of such problems.
 	   throw OutOfBounds(true);
-
+   }
    return aptr[sub];
 }
 
@@ -111,28 +107,22 @@ T &SimpleVector<T>::operator[](const int &sub)
 	//Program.
   if (sub < 0)
       throw OutOfBounds(false);
-   if(sub >= arraySize)
+  if(sub >= arraySize){
+	   //This gives the program better understanding
+	   //Of what is happening and allows for finer
+	   //handling of such problems.
 	   throw OutOfBounds(true);
-
+  }
    return aptr[sub];
 }
 
 template <class T>
 void SimpleVector<T>::push_back(T val)
 {
-	//if(arraySize++ == maxSize){
-	//	maxSize *= 2;
-	//	T *temp = new T [maxSize];
-
-	//	for(int i = 0; i < arraySize - 1; i++){
-	//	*(temp + i) = *(aptr + i);
-	//}
-	//	delete [] aptr;
-	//	temp[arraySize - 1] = val;
-	//	aptr = temp;
-	//}
-	//else
-	//	aptr[arraySize - 1] = val;
+	//The object may be initialized with zero
+	//elements, and have elements added at runtime.
+	//Since there are 0 elements at this time, no
+	//Need to copy aptr objects.
 	if(arraySize++ == 0){
 		aptr = new T;
 		aptr[0] = val;
@@ -167,6 +157,8 @@ void SimpleVector<T>::push_back(T val)
 template <class T>
 T SimpleVector<T>::pop_back()
 {
+	//When objects are added to aptr, they will overwrite these
+	//unindexed objects.
 	arraySize--;
 	return aptr[arraySize - 1];
 }
