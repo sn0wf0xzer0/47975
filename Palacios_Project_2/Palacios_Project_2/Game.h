@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Victory.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 #ifndef GAME_H
@@ -50,6 +52,10 @@ public:
 	//Human Player x's turn protocall.
 	void playerOturn();										
 	//Human Player o's turn protocall.
+	void systemRandTurn();
+	//Random AI player's turn.
+	void systemCatTurn();
+	//AI actively seeks a cats's game.
 	bool validateMove(char);								
 	//Check move selection against available moves.
 	char *getAvailableMoves();								

@@ -25,6 +25,7 @@ Game::Game()
 	fatlady = false;
 	victory = false;
 	catsGame = false;
+	srand(time(0));
 }
 
 Game::Game(Player eX, Player oH)
@@ -39,6 +40,7 @@ Game::Game(Player eX, Player oH)
 	fatlady = false;
 	victory = false;
 	catsGame = false;
+	srand(time(0));
 }
 
 Game::~Game()
@@ -176,6 +178,7 @@ void Game::displayMenu()
 		<< "type [rules] to learn how you play this version of Tic-Tac-Toe.\n"
 		<< "type [play] to play a game of Tic-Tac-Toe!\n"
 		<< "type [fast play] to play a fast game of Tic-Tac-Toe.\n"
+		<< "type [derp] to play a fast game against an easey AI.\n"
 		<< "Type [victories] to see past victories.\n"
 		<< "type [exit] to exit game.\n";
 }
@@ -322,11 +325,14 @@ int Game::getChoice()
 		case 'f':
 			num = 4;
 			break;
-		case 'v':
+		case 'd':
 			num = 5;
 			break;
-		case 'e':
+		case 'v':
 			num = 6;
+			break;
+		case 'e':
+			num = 7;
 			break;
 		default:
 			cout << "[" << choice << "] was not an option, please try again.\n";
@@ -384,6 +390,24 @@ void Game::playerOturn()
 		getline(cin, move);
 	} while (validateMove(move[0]) == false);
 	cap(move[0] - 48, oh);
+	turnNum++;
+	exTurn = true;
+}
+
+void Game::systemRandTurn()
+{
+	cout << "Turn number " << turnNum << endl;
+	cout << "system's turn.\n";
+	availMoves = getAvailableMoves();
+	displayField();
+	cout << "Available moves: ";
+	for(int i = 0; i < numMoves; i++){
+		cout << availMoves[i] << " ";
+	}
+	cout << endl;
+	int move = rand() % numMoves;
+		cout << "Your system chooses: " << availMoves[move] << "\n";
+	cap(availMoves[move] - 48, oh);
 	turnNum++;
 	exTurn = true;
 }
@@ -453,7 +477,7 @@ void Game::play()
 				<< "first one is \"n\" to see the next entry.\n"
 				<< "	->Option Details<-\n"
 				<< "In the main menu, you have the option for this message, rules, play, fast play,\n"
-				<< "victories, and exit. Here's a quick description of each.\n"
+				<< "derp, victories, and exit. Here's a quick description of each.\n"
 				<< "rules:	This option gives you a simple run down of the rules of tic-tac-toe and\n"
 				<< "	how to select a space for capture during game play in either play or\n"
 				<< "	fastplay modes.\n"
@@ -465,6 +489,10 @@ void Game::play()
 				<< "	This option allows you and an opponent to play a fast game of \n"
 				<< "	tic-tac-toe. Names do not need to be entered and the board will not be\n"
 				<< "	saved when a player wins.\n"
+				<< "derp:\n"
+				<< "	This option is a low dificulty one player game; the system is player Oh\n"
+				<< "	whom will chose it's moves randomly... so you can't be sure if you will\n"
+				<< "	win or get a cat's game.\n"
 				<< "Victories:\n"
 				<< "	This option allows you to view saved victoriesin the following format:\n"
 				<< "	Winner: Beck	<-- This is the name of the winning player.\n"
@@ -612,10 +640,40 @@ void Game::play()
 			break;
 
 		case 5:
-			dispVictories();
+			do
+			{
+				Game *newGame;
+				newGame = new Game();
+				cout << static_cast<char>(7);
+				do
+				{
+					if(newGame->getExTurn()){
+						newGame->playerXturn();
+					}
+					else
+						newGame->systemRandTurn();
+
+				} while (newGame->fatlady == false);
+
+				move.clear();
+				cout << "would you like to play again?\n";
+				getline(cin, move);
+				if(tolower(move[0]) == 'y'){
+					newGame->~Game();
+					replay = true;
+				}
+				else{
+					replay = false;
+					newGame->~Game();
+				}
+			} while (replay == true);
 			break;
 
 		case 6:
+			dispVictories();
+			break;
+
+		case 7:
 			cout << "Good bye.\n";
 			break;
 		} 
