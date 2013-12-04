@@ -2,7 +2,7 @@
 //Author: John Palacios.
 
 #include "Space.h"
-#include "SearchableVector.h"
+#include "SearchableRow.h"
 //using namespace std;
 
 #ifndef BOARD_H
@@ -16,7 +16,7 @@ private:
 	int rightPos;		//Keeps track of the element position when printing board.
 	int downPos;		//Keeps track of the element position when printing board.
 protected:
-	SearchableVector<Space> *spaces;
+	SearchableRow<Space> *spaces;
 	//Space **spaces;		//pointer to two dimensional dynamic array of space objects.
 public:
 	Board();						

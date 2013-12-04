@@ -201,15 +201,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ObjectRow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Player.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SearchableVector.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleVector.h"
+				RelativePath=".\SearchableRow.h"
 				>
 			</File>
 			<File

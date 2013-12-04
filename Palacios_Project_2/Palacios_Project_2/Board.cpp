@@ -4,7 +4,7 @@
 
 #include "Board.h"
 #include "Space.h"
-#include "SearchableVector.h"
+#include "SearchableRow.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -16,9 +16,9 @@ Board::Board()
 	root = 3;
 	numSpaces = root * root;
 	//I could use a two dimensional array of space objects;
-	//But the SearchableVector takes care of some tasks
+	//But the SearchableRow takes care of some tasks
 	//Related to dynamic alocation.
-	spaces = new SearchableVector<Space> [root];
+	spaces = new SearchableRow<Space> [root];
 	do{
 		//This process may be repeated should the system cause
 		//my vector object to throw a memory allocation error
@@ -30,12 +30,12 @@ Board::Board()
 			//Key to be pressed to capture it.
 			ch -= i * root;
 			ch += j;
-			spaces[i].push_back(Space(ch));
+			spaces[i].push(Space(ch));
 		ch = 55;
 		}
 	}
 		}
-		catch(SimpleVector<Space>::AllocError){
+		catch(ObjectRow<Space>::AllocError){
 			string reply;
 			cout << "It would seem that there is not enough\n"
 				<< "available memory on your system to play\n"
@@ -88,9 +88,9 @@ Board::Board(int base)
 	root = base;
 	numSpaces = root * root;
 	//I could use a two dimensional array of space objects;
-	//But the SearchableVector takes care of some tasks
+	//But the SearchableRow takes care of some tasks
 	//Related to dynamic alocation.
-	spaces = new SearchableVector<Space> [root];
+	spaces = new SearchableRow<Space> [root];
 	do{
 		//This process may be repeated should the system cause
 		//my vector object to throw a memory allocation error
@@ -102,12 +102,12 @@ Board::Board(int base)
 			//Key to be pressed to capture it.
 			ch -= i * root;
 			ch += j;
-			spaces[i].push_back(Space(ch));
+			spaces[i].push(Space(ch));
 		ch = 55;
 		}
 	}
 		}
-		catch(SimpleVector<Space>::AllocError){
+		catch(ObjectRow<Space>::AllocError){
 			string reply;
 			cout << "It would seem that there is not enough\n"
 				<< "available memory on your system to play\n"
@@ -173,7 +173,7 @@ void Board::flipSpace(int pos, char token)
 	{
 		//Middle row.
 		i = 1;
-		j = pos - 4;	//The index of the aptr pointer.
+		j = pos - 4;	//The index of the dynTArr pointer.
 	}
 	if(pos >= numSpaces - (3 * root -1) && pos <= numSpaces - (root*2))
 	{
@@ -203,7 +203,7 @@ void Board::showBoard()
 			}
 		}
 		//Each time f(x) printSpaces is called,
-		//The first index of the SearchableVector
+		//The first index of the SearchableRow
 		//Array must be incremented so as to work with
 		//The next object.
 		if(row % 2 == 1){

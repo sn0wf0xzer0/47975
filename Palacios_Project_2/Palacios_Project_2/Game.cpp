@@ -46,6 +46,7 @@ Game::~Game()
 	field->~Board();
 	delete [] availMoves;
 }
+
 void Game::displayField()
 {
 	field->showBoard();
@@ -171,7 +172,8 @@ void Game::saveGame()
 
 void Game::displayMenu()
 {
-	cout << "type [rules] to learn how you play this version of Tic-Tac-Toe.\n"
+	cout << "type [help] to learn how to navigate game menues.\n"
+		<< "type [rules] to learn how you play this version of Tic-Tac-Toe.\n"
 		<< "type [play] to play a game of Tic-Tac-Toe!\n"
 		<< "type [fast play] to play a fast game of Tic-Tac-Toe.\n"
 		<< "Type [victories] to see past victories.\n"
@@ -303,32 +305,33 @@ int Game::getChoice()
 {
 	string choice;
 	int num = 0;
+	char option;
 	getline(cin, choice);
+	option = tolower(choice[0]);
 
-	if(tolower(choice[0]) == 'r'){
-		num = 1;
+	switch (option){
+		case 'h':
+			num = 1;
+			break;
+		case 'r':
+			num = 2;
+			break;
+		case 'p':
+			num = 3;
+			break;
+		case 'f':
+			num = 4;
+			break;
+		case 'v':
+			num = 5;
+			break;
+		case 'e':
+			num = 6;
+			break;
+		default:
+			cout << "[" << choice << "] was not an option, please try again.\n";
+			break;
 	}
-
-	if(tolower(choice[0]) == 'p'){
-		num = 2;
-	}
-
-	if(tolower(choice[0]) == 'f'){
-		num = 3;
-	}
-
-	if(tolower(choice[0]) == 'v'){
-		num = 4;
-	}
-
-	if(tolower(choice[0]) == 'e'){
-		num = 5;
-	}
-
-	else if(num == 0){
-		cout << "[" << choice << "] was not an option, please try again.\n";
-	}
-
 	return num;
 }
 
@@ -441,6 +444,49 @@ void Game::play()
 		switch (choice)
 		{
 		case 1:
+			cout << "This menue system allows you to make selections by typeing the first or more\n"
+				<< "letters of the word appearing in brackets in the menu. Example:\n"
+				<< "The text: \"type [next] to see the next entry.\" means that you should type\n"
+				<< "the letter \"n\" and then hit enter to see the next entry. But you may also\n"
+				<< "type the letters \"n\" \"e\" \"x\" \"t\" and then hit enter to accomplish the\n"
+				<< "same task- infact, you could type any combination of letters so long as the\n"
+				<< "first one is \"n\" to see the next entry.\n"
+				<< "	->Option Details<-\n"
+				<< "In the main menu, you have the option for this message, rules, play, fast play,\n"
+				<< "victories, and exit. Here's a quick description of each.\n"
+				<< "rules:	This option gives you a simple run down of the rules of tic-tac-toe and\n"
+				<< "	how to select a space for capture during game play in either play or\n"
+				<< "	fastplay modes.\n"
+				<< "play:	This option allows you to enter your name and your opponents name. This\n"
+				<< "	game is identical to the fast play game option of tic-tac-toe, but the\n"
+				<< "	winner's name and the board configureation will be saved, for later\n"
+				<< "	viewing using the [victories] option in the main menu.\n"
+				<< "fast play:\n"
+				<< "	This option allows you and an opponent to play a fast game of \n"
+				<< "	tic-tac-toe. Names do not need to be entered and the board will not be\n"
+				<< "	saved when a player wins.\n"
+				<< "Victories:\n"
+				<< "	This option allows you to view saved victoriesin the following format:\n"
+				<< "	Winner: Beck	<-- This is the name of the winning player.\n"
+				<< "	Who's Board looked like:\n"
+				<< "		 7 " << symb[0] << " 8 "<< symb[0] << " X\n"
+				<< "		" << symb[1] << symb[1] << symb[1]<< symb[2] << symb[1] << symb[1]<< symb[1] << symb[2] << symb[1]<< symb[1] << symb[1] << endl
+				<< "		 4 " << symb[0] << " X "<< symb[0] << " O	<- This is what Beck's board looked like.\n"	
+				<< "		" << symb[1] << symb[1] << symb[1]<< symb[2] << symb[1] << symb[1]<< symb[1] << symb[2] << symb[1]<< symb[1] << symb[1] << endl
+				<< "		 x " << symb[0] << " 2 "<< symb[0] << " O\n"
+				<< "		This is entry 1 of 5	<- *This means that there are five\n"
+				<< "		entries availablefor viewing and you are looking at the\n"
+				<< "		first one.*\n"
+				<< "		Type [back] to see the previous entry. \n"
+				<< "		Type [next] to see the next entry.	\n"
+				<< "		Type [done] when you would like to return to the main menue.\n"
+				<< "		*To view another entry; simply choose one of the above options*\n"
+				<< "		*If you try to tpye back here, you will hear a beep and see\n"
+				<< "		a messagetelling you that there are no more options in that\n"
+				<< "		direction: simply type next instad.*\n";
+			break;
+
+		case 2:
 			cout << "Turn number 1\n"
 				<< "Player X's turn\n"
 				<< "\t 7 " << symb[0] << " 8 "<< symb[0] << " 9         type one of these numbers\n"
@@ -477,7 +523,7 @@ void Game::play()
 				<< "*Tip: turn on your speakers.\n\n";
 			break;
 
-		case 2:
+		case 3:
 			do
 			{
 				cout << "Setting up new game...\n";
@@ -535,7 +581,7 @@ void Game::play()
 			} while (replay == true);
 			break;
 
-		case 3:
+		case 4:
 			do
 			{
 				Game *newGame;
@@ -565,11 +611,11 @@ void Game::play()
 			} while (replay == true);
 			break;
 
-		case 4:
+		case 5:
 			dispVictories();
 			break;
 
-		case 5:
+		case 6:
 			cout << "Good bye.\n";
 			break;
 		} 

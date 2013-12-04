@@ -4,7 +4,7 @@
 //
 
 #include "Game.h"
-#include "SearchableVector.h"
+#include "SearchableRow.h"
 #include <iostream>
 using namespace std;
 
@@ -31,14 +31,14 @@ int main()
 	//cout << endl << endl;
 
 	//int root = 3;
-	//SearchableVector<Space> *testOne;
-	//testOne = new SearchableVector<Space> [root];
+	//SearchableRow<Space> *testOne;
+	//testOne = new SearchableRow<Space> [root];
 	//for(int i = 0; i < root; i++){
 	//	for(int j = 0; j < root; j++){
 	//		if(j == 0)
-	//		testOne[i].push_back(Space());
+	//		testOne[i].push(Space());
 	//		else
-	//			testOne[i].push_back(Space('X'));
+	//			testOne[i].push(Space('X'));
 	//	}
 	//}
 	//for(int i = 0; i < 3; i++){
