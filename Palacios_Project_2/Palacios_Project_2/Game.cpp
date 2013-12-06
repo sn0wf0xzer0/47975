@@ -83,6 +83,9 @@ void Game::checkStatus(Player act)
 	for(int pos = 0; pos < root; pos++){
 		if(field->spaces[pos][pos].owner == act.playerToken){
 			numOpYeX++;
+			if(numOpYeX == root - 1 && act.playerToken == 'X'){
+				compStrat.numOpYeX = true;
+			}
 			if(numOpYeX == root){
 				for(int i = 0; i < root; i++){
 						cout << static_cast<char>(7);
@@ -99,6 +102,9 @@ void Game::checkStatus(Player act)
 	for(int row = 0, col = root - 1; row < root; row++, col--){
 		if(field->spaces[row][col].owner == act.playerToken){
 			numYeqEx++;
+			if(numYeqEx == root - 1 && act.playerToken == 'X'){
+				compStrat.numYeqEx = true;
+			}
 			if(numYeqEx == root){
 				for(int i = 0; i < root; i++){
 						cout << static_cast<char>(7);
@@ -117,6 +123,9 @@ void Game::checkStatus(Player act)
 		for(int j = 0; j < root; j++){
 			if(field->spaces[i][j].owner == act.playerToken){
 				numConst++;
+				if(numConst == root - 1 && act.playerToken == 'X'){
+					compStrat.numConst = true;
+				}
 				if(numConst == root){
 					for(int i = 0; i < root; i++){
 						cout << static_cast<char>(7);
@@ -136,6 +145,9 @@ void Game::checkStatus(Player act)
 		for(int j = 0; j < root; j++){
 			if(field->spaces[j][i].owner == act.playerToken){
 				numUndef++;
+				if(numUndef == root - 1 && act.playerToken == 'X'){
+					compStrat.numUndef = true;
+				}
 				if(numUndef == root){
 					for(int i = 0; i < root; i++){
 						cout << static_cast<char>(7);
@@ -428,7 +440,7 @@ void Game::systemCatTurn()
 		catTurnOne();
 	}
 	else if(turnNum == 4){
-		//catTurnTwo();
+		catTurnTwo();
 	}
 	else{
 	move = rand() % numMoves;
@@ -443,26 +455,202 @@ void Game::catTurnOne()
 {
 	bool corner = false;
 	bool center = false;
-	//int move;
+	Tetrahedron oneD4;
+	Decahedron oneD10;
+	int roll;
 	//look at the corners of the board.
 	for(int i = 0; i < root; i += 2){
 		for(int j = 0; j < root; j += 2){
 			if(field->spaces[i][j].owner == 'X'){
+				compStrat.humanFstY = i;
+				compStrat.humanFstX = j;
+				compStrat.opener = 'A';
 				corner = true;
 			}
 		}
 	}
 	//look at the center of the board.
 	if(field->spaces[1][1].owner == 'X'){
+		compStrat.opener = 'B';
 		center = true;
 	}
-	
+	//Smart first move by player ex, time to limit thier next move.
 	if(corner == true){
+		compStrat.fstPlayY = 1;
+		compStrat.fstPlayX = 1;
 		cap(5,oh);
 	}
 	else if(center == true){
-		//This is where I randomly choose a corner.
+		oneD4.roll();
+		roll = oneD4.checkDie();
+		switch(roll){
+			case 1:
+				compStrat.fstPlayY = 0;
+				compStrat.fstPlayX = 0;
+				cap(7, oh);
+				break;
+			case 2:
+				compStrat.fstPlayY = 0;
+				compStrat.fstPlayX = 2;
+				cap(9, oh);
+				break;
+			case 3:
+				compStrat.fstPlayY = 2;
+				compStrat.fstPlayX = 0;
+				cap(1, oh);
+				break;
+			case 4:
+				compStrat.fstPlayY = 2;
+				compStrat.fstPlayX = 2;
+				cap(3, oh);
+				break;
+			default:
+				cout << "Cat says, \"I think my d 4 is broken :C.\"\n"
+					<< "Default case in catTurnOne.\n";
+				break;
+		}
 	}
+	else{
+		compStrat.opener = 'C'; 
+		oneD4.roll();
+		roll = oneD10.checkDie() / 2;
+		switch(roll){
+			case 1:
+				compStrat.fstPlayY = 0;
+				compStrat.fstPlayX = 0;
+				cap(7, oh);
+				break;
+			case 2:
+				compStrat.fstPlayY = 0;
+				compStrat.fstPlayX = 2;
+				cap(9, oh);
+				break;
+			case 3:
+				compStrat.fstPlayY = 2;
+				compStrat.fstPlayX = 0;
+				cap(1, oh);
+				break;
+			case 4:
+				compStrat.fstPlayY = 2;
+				compStrat.fstPlayX = 2;
+				cap(3, oh);
+				break;
+			case 5:
+				compStrat.fstPlayY = 1;
+				compStrat.fstPlayX = 1;
+				cap(5, oh);
+				break;
+			default:
+				cout << "Cat says, \"I think my d 10 is broken :C.\"\n"
+					<< "Default case in catTurnOne.\n";
+				break;
+		}
+	}
+	if(compStrat.opener == 'A'){
+		cout << "Cat says, \"I see that you've played this game before.\"\n";
+	}
+	if(compStrat.opener == 'B'){
+		cout << "Cat says, \"A decent first move for an amature.\"\n";
+	}
+	if(compStrat.opener == 'C'){
+		cout << "Cat says, \"Perhaps you should try taking the center,\n"
+			<< "or a corner as your first move next time.\"\n";
+	}
+}
+
+void Game::catTurnTwo()
+{
+	Tetrahedron oneD4;
+	//Player opened with the center capture...
+	if(compStrat.opener == 'B'){
+		if(compStrat.numConst){
+			for(int i = 0; i < root; i++){
+				if(field->spaces[1][i].owned == false){
+					cap(4 + i, oh);
+					cout << "\n";
+				}
+			}
+		}
+		else if(compStrat.numUndef){
+			for(int i = 0; i < root; i++){
+				if(field->spaces[i][2].owned == false){
+					cap(8 - root * i, oh);
+					cout << "\n";
+				}
+			}
+		}
+		//player is moving in line y=x.
+		else if(compStrat.numYeqEx){
+			//not a good idea, but valid.
+			if(compStrat.fstPlayY == 0 && compStrat.fstPlayX == 2){
+				cap(6, oh);
+			}
+			else if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 0){
+				cap(4, oh);
+			}
+			else{
+				if(field->spaces[2][0].owned == false){
+						cap(1, oh);
+				}
+				else
+					cap(9, oh);
+			}
+			//The player is moving in line -y=x
+		else if(compStrat.numOpYeX){
+			//Foolish, but valid.
+			if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 2){
+				cap(6, oh);
+			}
+			else if(compStrat.fstPlayY == 0 && compStrat.fstPlayX == 0){
+				cap(4, oh);
+			}
+			else{
+				if(field->spaces[2][2].owned == false){
+						cap(3, oh);
+				}
+				else
+					cap(7, oh);
+			}	
+	}
+	//The player is attempting to complete three accross.
+	if(compStrat.numConst == true){
+		for(int i = 0; i < root; i++){
+			for(int j = 0; j < root; j++){
+				//Cat only needs to check those searchable rows containing spaces
+				//Captured by x. To trip numConst flag, both x's will be in a row.
+				if(field->spaces[i].linSearch(Space('X')) != -1){
+					if(field->spaces[i][j].owned == false){
+						cap((7 - root * i) + j, oh);
+						cout << "\n";
+					}
+				}
+			}
+		}
+	}
+
+	if(compStrat.opener == 'A'){
+		//If the player started in a corner and is going diagonal left to right
+		if(compStrat.numOpYeX == true){
+			oneD4.roll();
+			cap(oneD4.checkDie() * 2, oh);
+			cout << "\n";
+		}
+		//Now to check y = x.
+		if(compStrat.numYeqEx == true){
+			oneD4.roll();
+			cap(oneD4.checkDie() * 2, oh);
+			cout << "\n";
+		}
+		//Now to check x = some constant.
+		if(compStrat.numUndef == true){
+			for(int j = 0; j < root; j++){
+				if(field->spaces[compStrat.humanFstX][j].owned == false){
+					cap(7 - root * j, oh);
+				}
+			}
+		}
+	}
+	//Need to check for players who started on the edges.
 }
 
 bool Game::validateMove(char move)

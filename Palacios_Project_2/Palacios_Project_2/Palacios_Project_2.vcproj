@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CatStrat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Decahedron.h"
 				>
 			</File>

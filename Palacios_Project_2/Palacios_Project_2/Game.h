@@ -7,6 +7,7 @@
 #include "Victory.h"
 #include "Tetrahedron.h"
 #include "Decahedron.h"
+#include "CatStrat.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -20,6 +21,7 @@ class Game
 private:
 	Player ex;				//Structure storing player x's name and token character.
 	Player oh;				//Structure storing player o's name and token character.
+	CatStrat compStrat;		//Structure storing human player's moves and stratigic information.
 	Player victor;			//The winner's details will be stored here.
 	Victory winner;			//Data storage struct.
 	Board *field;			//Pointer to a two dimensional array of space objects.
