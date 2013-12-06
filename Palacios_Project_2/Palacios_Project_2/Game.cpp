@@ -178,7 +178,7 @@ void Game::displayMenu()
 		<< "type [rules] to learn how you play this version of Tic-Tac-Toe.\n"
 		<< "type [play] to play a game of Tic-Tac-Toe!\n"
 		<< "type [fast play] to play a fast game of Tic-Tac-Toe.\n"
-		<< "type [derp] to play a fast game against an easey AI.\n"
+		<< "type [derpy] to play a fast game against an easey AI.\n"
 		<< "Type [victories] to see past victories.\n"
 		<< "type [exit] to exit game.\n";
 }
@@ -410,6 +410,58 @@ void Game::systemRandTurn()
 	cap(availMoves[move] - 48, oh);
 	turnNum++;
 	exTurn = true;
+}
+
+void Game::systemCatTurn()
+{
+	int move;
+	cout << "Turn number " << turnNum << endl;
+	cout << "Cat's turn.\n";
+	availMoves = getAvailableMoves();
+	displayField();
+	cout << "Available moves: ";
+	for(int i = 0; i < numMoves; i++){
+		cout << availMoves[i] << " ";
+	}
+	cout << endl;
+	if(turnNum == 2){
+		catTurnOne();
+	}
+	else if(turnNum == 4){
+		move = catTurnTwo();
+	}
+	else{
+	move = rand() % numMoves;
+	}
+		cout << "Cat chooses: " << availMoves[move] << "\n";
+	cap(availMoves[move] - 48, oh);
+	turnNum++;
+	exTurn = true;
+}
+
+int Game::catTurnOne()
+{
+	bool corner = false;
+	bool center = false;
+	int move;
+	//look at the corners of the board.
+	for(int i = 0; i < root; i += 2){
+		for(int j = 0; j < root; j += 2){
+			if(field->spaces[i][j].owner == 'X'){
+				corner = true;
+			}
+		}
+	}
+	//look at the center of the board.
+	if(field->spaces[1][1].owner == 'X'){
+		center = true;
+	}
+	
+	if(corner == true){
+		cap(5,oh);
+	}
+	else if(center == true){
+		switch(
 }
 
 bool Game::validateMove(char move)

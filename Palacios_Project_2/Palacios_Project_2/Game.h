@@ -56,6 +56,10 @@ public:
 	//Random AI player's turn.
 	void systemCatTurn();
 	//AI actively seeks a cats's game.
+	int catTurnOne();
+	//AI first turn.
+	int catTurnTwo();
+	//AI second turn.
 	bool validateMove(char);								
 	//Check move selection against available moves.
 	char *getAvailableMoves();								

@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Decahedron.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Game.cpp"
 				>
 			</File>
@@ -186,6 +190,10 @@
 				RelativePath=".\Space.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Tetrahedron.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -194,6 +202,14 @@
 			>
 			<File
 				RelativePath=".\Board.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Decahedron.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Die.h"
 				>
 			</File>
 			<File
@@ -214,6 +230,10 @@
 			</File>
 			<File
 				RelativePath=".\Space.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tetrahedron.h"
 				>
 			</File>
 			<File
