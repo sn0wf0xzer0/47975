@@ -25,7 +25,7 @@ Game::Game()
 	fatlady = false;
 	victory = false;
 	catsGame = false;
-	srand(time(0));
+	srand(static_cast<unsigned>(time(0)));
 }
 
 Game::Game(Player eX, Player oH)
@@ -40,7 +40,7 @@ Game::Game(Player eX, Player oH)
 	fatlady = false;
 	victory = false;
 	catsGame = false;
-	srand(time(0));
+	srand(static_cast<unsigned>(time(0)));
 }
 
 Game::~Game()
@@ -428,7 +428,7 @@ void Game::systemCatTurn()
 		catTurnOne();
 	}
 	else if(turnNum == 4){
-		move = catTurnTwo();
+		//catTurnTwo();
 	}
 	else{
 	move = rand() % numMoves;
@@ -439,11 +439,11 @@ void Game::systemCatTurn()
 	exTurn = true;
 }
 
-int Game::catTurnOne()
+void Game::catTurnOne()
 {
 	bool corner = false;
 	bool center = false;
-	int move;
+	//int move;
 	//look at the corners of the board.
 	for(int i = 0; i < root; i += 2){
 		for(int j = 0; j < root; j += 2){
@@ -461,7 +461,8 @@ int Game::catTurnOne()
 		cap(5,oh);
 	}
 	else if(center == true){
-		switch(
+		//This is where I randomly choose a corner.
+	}
 }
 
 bool Game::validateMove(char move)

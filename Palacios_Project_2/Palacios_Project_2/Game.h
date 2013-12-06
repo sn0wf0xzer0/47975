@@ -5,6 +5,8 @@
 #include "Board.h"
 #include "Player.h"
 #include "Victory.h"
+#include "Tetrahedron.h"
+#include "Decahedron.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -56,9 +58,9 @@ public:
 	//Random AI player's turn.
 	void systemCatTurn();
 	//AI actively seeks a cats's game.
-	int catTurnOne();
+	void catTurnOne();
 	//AI first turn.
-	int catTurnTwo();
+	void catTurnTwo();
 	//AI second turn.
 	bool validateMove(char);								
 	//Check move selection against available moves.

@@ -17,7 +17,7 @@ public:
 	//default constructor.
 	int roll();
 	//f(x) from abstract base class which must be defined.
-	int cheat(int);
+	void cheat(int);
 	//Standard sheater f(x).
 };
 

@@ -15,15 +15,15 @@ private:
 	int showing;
 public:
 	Die()
-	{ showing = this->roll(), srand(time(0)); }
+	{ showing = 1, srand(static_cast<unsigned int>(time(0))); }	//Must not set rand here for inclusion in game.
 	//Default constructor.
-	checkDie();
+	int checkDie()
 	{ return showing; }
 	//Check to see which number is showing.
 	void setDie(int num)
 	{showing = num; }
 	//set side showing to the number given.
-	int roll() = 0;
+	virtual int roll() = 0;
 	//Generates a random number and sets showing.
 };
 

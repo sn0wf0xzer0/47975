@@ -4,8 +4,9 @@
 
 #include "Decahedron.h"
 
-void Decahedron::roll()
+int Decahedron::roll()
 {
+	int result;
 	result = rand() % numSides + 1;
 	setDie(result);
 	return checkDie();
@@ -18,4 +19,5 @@ void Decahedron::cheat(int num)
 	}
 	else{
 		setDie(0);
+	}
 }
