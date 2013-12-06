@@ -109,7 +109,7 @@ T *SearchableRow<T>::sortArray()
 template <class T>
 int SearchableRow<T>::linSearch(const T item)
 {
-	for (int i = 0; i <= this->size(); i++){
+	for (int i = 0; i < this->size(); i++){
 		if (getElementAt(i) == item){
 			return i;
 		}

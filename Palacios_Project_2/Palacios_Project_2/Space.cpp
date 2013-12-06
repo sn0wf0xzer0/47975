@@ -31,3 +31,15 @@ void Space::flipSpace(char token)
 		setSpace(token);
 	}
 }
+
+bool Space::operator ==(const Space &right)
+{
+	bool flag;
+	if (owner == right.owner/* && owned == right.owned*/){
+		flag = true;
+	}
+	else
+		flag = false;
+
+	return flag;
+}

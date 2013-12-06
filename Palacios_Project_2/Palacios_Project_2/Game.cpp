@@ -77,6 +77,11 @@ void Game::checkStatus(Player act)
 	int numYeqEx = 0;				//Number of spaces captured by act in line y = x.
 	int numConst = 0;				//Number of spaces captured by act in line y = some constant.
 	int numUndef = 0;				//Number of spaces captured by act in line x = some constant.
+	compStrat.numOpYeX = false;		//set/reset conditional human play flags.
+	compStrat.numYeqEx = false;
+	compStrat.numConst = false;
+	compStrat.numUndef = false;
+	
 
 	//Show me what victory looks like!
 	//diagonal left to right
@@ -190,7 +195,7 @@ void Game::displayMenu()
 		<< "type [rules] to learn how you play this version of Tic-Tac-Toe.\n"
 		<< "type [play] to play a game of Tic-Tac-Toe!\n"
 		<< "type [fast play] to play a fast game of Tic-Tac-Toe.\n"
-		<< "type [derpy] to play a fast game against an easey AI.\n"
+		<< "type [single] to play a fast game against an easey AI.\n"
 		<< "Type [victories] to see past victories.\n"
 		<< "type [exit] to exit game.\n";
 }
@@ -337,14 +342,17 @@ int Game::getChoice()
 		case 'f':
 			num = 4;
 			break;
-		case 'd':
+		case 's':
 			num = 5;
 			break;
-		case 'v':
+		case 'c':
 			num = 6;
 			break;
-		case 'e':
+		case 'v':
 			num = 7;
+			break;
+		case 'e':
+			num = 8;
 			break;
 		default:
 			cout << "[" << choice << "] was not an option, please try again.\n";
@@ -443,10 +451,11 @@ void Game::systemCatTurn()
 		catTurnTwo();
 	}
 	else{
+		//Must write CatTurnThree(); utilizing the if "Next move" is not owned strategy.
 	move = rand() % numMoves;
-	}
-		cout << "Cat chooses: " << availMoves[move] << "\n";
+	cout << "Cat chooses: " << availMoves[move] << "\n";
 	cap(availMoves[move] - 48, oh);
+	}
 	turnNum++;
 	exTurn = true;
 }
@@ -512,8 +521,11 @@ void Game::catTurnOne()
 	}
 	else{
 		compStrat.opener = 'C'; 
-		oneD4.roll();
+		oneD10.roll();
 		roll = oneD10.checkDie() / 2;
+		if(roll == 0){
+			roll = 1;
+		}
 		switch(roll){
 			case 1:
 				compStrat.fstPlayY = 0;
@@ -564,10 +576,14 @@ void Game::catTurnTwo()
 	//Player opened with the center capture...
 	if(compStrat.opener == 'B'){
 		if(compStrat.numConst){
-			for(int i = 0; i < root; i++){
-				if(field->spaces[1][i].owned == false){
-					cap(4 + i, oh);
-					cout << "\n";
+			for(int i = 0; i < root; i += 2){
+				for(int j = 0; j < root; j += 2){
+					if(field->spaces[i][j].owned == false){
+						field->spaces[i][j].flipSpace('O');
+						cout << "\n";
+						break;
+					}
+					break;
 				}
 			}
 		}
@@ -583,19 +599,20 @@ void Game::catTurnTwo()
 		else if(compStrat.numYeqEx){
 			//not a good idea, but valid.
 			if(compStrat.fstPlayY == 0 && compStrat.fstPlayX == 2){
-				cap(6, oh);
+				cap(7, oh);
 			}
 			else if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 0){
-				cap(4, oh);
+				cap(3, oh);
 			}
 			else{
 				if(field->spaces[2][0].owned == false){
-						cap(1, oh);
+					cap(1, oh);
 				}
 				else
 					cap(9, oh);
 			}
-			//The player is moving in line -y=x
+		}
+		//The player is moving in line -y=x
 		else if(compStrat.numOpYeX){
 			//Foolish, but valid.
 			if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 2){
@@ -606,26 +623,13 @@ void Game::catTurnTwo()
 			}
 			else{
 				if(field->spaces[2][2].owned == false){
-						cap(3, oh);
+					cap(3, oh);
 				}
 				else
 					cap(7, oh);
 			}	
-	}
-	//The player is attempting to complete three accross.
-	if(compStrat.numConst == true){
-		for(int i = 0; i < root; i++){
-			for(int j = 0; j < root; j++){
-				//Cat only needs to check those searchable rows containing spaces
-				//Captured by x. To trip numConst flag, both x's will be in a row.
-				if(field->spaces[i].linSearch(Space('X')) != -1){
-					if(field->spaces[i][j].owned == false){
-						cap((7 - root * i) + j, oh);
-						cout << "\n";
-					}
-				}
-			}
 		}
+
 	}
 
 	if(compStrat.opener == 'A'){
@@ -651,6 +655,35 @@ void Game::catTurnTwo()
 		}
 	}
 	//Need to check for players who started on the edges.
+	if(compStrat.opener == 'C'){
+		//player is attempting to capture in line with undefined slope.
+		if(compStrat.numUndef){
+			for(int i = 0; i < root; i++){
+				if(field->spaces[i].linSearch(Space('X')) == -1){
+					int col = i;
+					for(int row = 0; row < root; row++){
+						if(field->spaces[row][col].owned == false)
+							cap((7 - row * root) + col, oh);
+					}
+				}
+			}
+		}
+		//The player is attempting to complete three accross.
+		if(compStrat.numConst == true){
+			for(int i = 0; i < root; i++){
+				//Cat only needs to check those searchable rows containing spaces
+				//Captured by x. To trip numConst flag, both x's will be in a row.
+				if(field->spaces[i].linSearch(Space('X')) != -1){
+					for(int j = 0; j < root; j++){
+						if(field->spaces[i][j].owned == false){
+							cap((7 - root * i) + j, oh);
+							cout << "\n";
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 bool Game::validateMove(char move)
@@ -909,12 +942,41 @@ void Game::play()
 				}
 			} while (replay == true);
 			break;
-
 		case 6:
-			dispVictories();
+			do
+			{
+				Game *newGame;
+				newGame = new Game();
+				cout << static_cast<char>(7);
+				do
+				{
+					if(newGame->getExTurn()){
+						newGame->playerXturn();
+					}
+					else
+						newGame->systemCatTurn();
+
+				} while (newGame->fatlady == false);
+
+				move.clear();
+				cout << "would you like to play again?\n";
+				getline(cin, move);
+				if(tolower(move[0]) == 'y'){
+					newGame->~Game();
+					replay = true;
+				}
+				else{
+					replay = false;
+					newGame->~Game();
+				}
+			} while (replay == true);
 			break;
 
 		case 7:
+			dispVictories();
+			break;
+
+		case 8:
 			cout << "Good bye.\n";
 			break;
 		} 

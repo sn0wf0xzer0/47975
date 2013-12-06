@@ -32,6 +32,7 @@ public:
 		return stream;
 	}
 	//Overloaded ostream sream extraction operator used to display owner's character to screen.
+	bool Space::operator == (const Space &);
 	/*friend class Board;*/
 	//Because the Board contains a dynamic array of this class, Board must be able to manipulate space objects.
 	friend class Game;

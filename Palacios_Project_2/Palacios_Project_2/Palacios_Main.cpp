@@ -3,7 +3,7 @@
 //Author: John Palacios
 //
 
-//#include "Game.h"
+#include "Game.h"
 //#include "SearchableRow.h"
 #include <iostream>
 using namespace std;
@@ -67,7 +67,7 @@ int main()
 	//testTwo.showBoard();
 	//testTwo.~Board();			//Now to see if the Board can safely delete the SerchableVector<Space> array.
 	//cout << "Test concluded.\n"; //... and it cannot. must ask about this tomarrow. Now it is time for sleep for work tomarrow morning.
-	//Game::play();
+	Game::play();
 	//Now to test my die classes.
 	//Tetrahedron dieOne;
 	//Decahedron dieTwo;
