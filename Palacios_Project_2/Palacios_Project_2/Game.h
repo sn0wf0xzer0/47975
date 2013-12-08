@@ -64,6 +64,8 @@ public:
 	//AI first turn.
 	void catTurnTwo();
 	//AI second turn.
+	void catTurnThree();
+	//AI Third turn.
 	bool validateMove(char);								
 	//Check move selection against available moves.
 	char *getAvailableMoves();								

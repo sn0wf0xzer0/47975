@@ -576,11 +576,18 @@ void Game::catTurnTwo()
 	//Player opened with the center capture...
 	if(compStrat.opener == 'B'){
 		if(compStrat.numConst){
-			for(int i = 0; i < root; i += 2){
+			for(int i = 0; i < root; i++){
 				for(int j = 0; j < root; j += 2){
-					if(field->spaces[i][j].owned == false){
-						field->spaces[i][j].flipSpace('O');
+					if(field->spaces[1][i].owned == false){
+						field->spaces[1][i].flipSpace('O');
 						cout << "\n";
+						if(field->spaces[compStrat.fstPlayY][i].owned == false){
+							compStrat.nextMoveX = i;
+							compStrat.nextMoveY = compStrat.fstPlayY;
+						}
+						else{
+							compStrat.nextMoveX = 2 - i;
+							compStrat.nextMoveY = 2 - compStrat.fstPlayY;
 						break;
 					}
 					break;
@@ -638,20 +645,75 @@ void Game::catTurnTwo()
 			oneD4.roll();
 			cap(oneD4.checkDie() * 2, oh);
 			cout << "\n";
+			switch(oneD4.checkDie()){
+				case 1:
+					compStrat.nextMoveX = 1;
+					compStrat.nextMoveY = 0;
+					break;
+				case 2:
+					compStrat.nextMoveX = 2;
+					compStrat.nextMoveY = 1;
+					break;
+				case 3:
+					compStrat.nextMoveX = 0;
+					compStrat.nextMoveY = 1;
+					break;
+				case 4:
+					compStrat.nextMoveX = 1;
+					compStrat.nextMoveY = 2;
+					break;
+			}
 		}
 		//Now to check y = x.
 		if(compStrat.numYeqEx == true){
 			oneD4.roll();
 			cap(oneD4.checkDie() * 2, oh);
 			cout << "\n";
+			switch(oneD4.checkDie()){
+				case 1:
+					compStrat.nextMoveX = 1;
+					compStrat.nextMoveY = 0;
+					break;
+				case 2:
+					compStrat.nextMoveX = 2;
+					compStrat.nextMoveY = 1;
+					break;
+				case 3:
+					compStrat.nextMoveX = 0;
+					compStrat.nextMoveY = 1;
+					break;
+				case 4:
+					compStrat.nextMoveX = 1;
+					compStrat.nextMoveY = 2;
+					break;
+			}
 		}
 		//Now to check x = some constant.
 		if(compStrat.numUndef == true){
 			for(int j = 0; j < root; j++){
-				if(field->spaces[compStrat.humanFstX][j].owned == false){
-					cap(7 - root * j, oh);
+				if(field->spaces[j][compStrat.humanFstX].owned == false){
+					cap((7 - root * j) + compStrat.humanFstX, oh);
+					compStrat.nextMoveX = 2 - compStrat.humanFstX;
+					compStrat.nextMoveY = j;
 				}
 			}
+		}
+		//Player must be in y = constant.
+		if(compStrat.numConst){
+			for(int j = 0; j < root; j++){
+				if(field->spaces[compStrat.humanFstY][j].owned == false){
+					cap((7 - compStrat.humanFstY * root) + j, oh);
+					compStrat.nextMoveX = 2 - j;
+					compStrat.nextMoveY = 2 - compStrat.humanFstY;
+				}
+			}
+		}
+		else{
+			if(field->spaces[1][0].owned == false){
+				cap(4, oh);
+			}
+			else
+				cap(6, oh);
 		}
 	}
 	//Need to check for players who started on the edges.
@@ -659,11 +721,12 @@ void Game::catTurnTwo()
 		//player is attempting to capture in line with undefined slope.
 		if(compStrat.numUndef){
 			for(int i = 0; i < root; i++){
-				if(field->spaces[i].linSearch(Space('X')) == -1){
+				if(field->spaces[i].linSearch(Space('X')) != -1){
 					int col = i;
 					for(int row = 0; row < root; row++){
 						if(field->spaces[row][col].owned == false)
 							cap((7 - row * root) + col, oh);
+						break;
 					}
 				}
 			}
@@ -684,6 +747,11 @@ void Game::catTurnTwo()
 			}
 		}
 	}
+}
+
+void Game::catTurnThree()
+{
+
 }
 
 bool Game::validateMove(char move)
