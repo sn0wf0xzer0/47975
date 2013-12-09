@@ -3,7 +3,6 @@
 
 #include "Space.h"
 #include "SearchableRow.h"
-//using namespace std;
 
 #ifndef BOARD_H
 #define BOARD_H

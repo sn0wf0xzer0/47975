@@ -2,7 +2,7 @@
 //File: CatStrat.h
 //Author: John Palacios
 
-#include <string>
+//#include <string>
 using namespace std;
 
 #ifndef CATSTRAT_H

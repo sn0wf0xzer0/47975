@@ -1181,6 +1181,7 @@ void Game::play()
 				}
 			} while (replay == true);
 			break;
+
 		case 6:
 			do
 			{
@@ -1219,5 +1220,5 @@ void Game::play()
 			cout << "Good bye.\n";
 			break;
 		} 
-	}while(choice != 5);
+	}while(choice != 8);
 }
