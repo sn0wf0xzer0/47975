@@ -12,7 +12,7 @@ class ObjectRow
 {
 private:
 	T *dynTArr;			//points to allocated array of T type
-	int arrSize;			//Number of elements in the array
+	int arrSize;		//Number of used elements in the array
 	int capacity;		//Total Maximum number of elements available.
 
 public:

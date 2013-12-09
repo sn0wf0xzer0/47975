@@ -15,7 +15,7 @@ private:
 	int showing;
 public:
 	Die()
-	{ showing = 1, srand(static_cast<unsigned int>(time(0))); }	//Must not set rand here for inclusion in game.
+	{ showing = 1;}
 	//Default constructor.
 	int checkDie()
 	{ return showing; }

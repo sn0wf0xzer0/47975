@@ -26,6 +26,16 @@ Game::Game()
 	victory = false;
 	catsGame = false;
 	srand(static_cast<unsigned>(time(0)));
+	compStrat.blkOpYeX	= false;
+	compStrat.blkYeEx	= false;
+	compStrat.blkUndef	= false;
+	compStrat.blkConst	= false;
+	compStrat.constBlkd = -1;
+	compStrat.undefBlkd = -1;
+	compStrat.posConst	= -1;
+	compStrat.posUndef	= -1;
+	compStrat.nextMoveX = -1;
+	compStrat.nextMoveY = -1;
 }
 
 Game::Game(Player eX, Player oH)
@@ -41,6 +51,16 @@ Game::Game(Player eX, Player oH)
 	victory = false;
 	catsGame = false;
 	srand(static_cast<unsigned>(time(0)));
+	compStrat.blkOpYeX	= false;
+	compStrat.blkYeEx	= false;
+	compStrat.blkUndef	= false;
+	compStrat.blkConst	= false;
+	compStrat.constBlkd = -1;
+	compStrat.undefBlkd = -1;
+	compStrat.posConst	= -1;
+	compStrat.posUndef	= -1;
+	compStrat.nextMoveX = -1;
+	compStrat.nextMoveY = -1;
 }
 
 Game::~Game()
@@ -130,6 +150,7 @@ void Game::checkStatus(Player act)
 				numConst++;
 				if(numConst == root - 1 && act.playerToken == 'X'){
 					compStrat.numConst = true;
+					compStrat.posConst = i;
 				}
 				if(numConst == root){
 					for(int i = 0; i < root; i++){
@@ -152,6 +173,7 @@ void Game::checkStatus(Player act)
 				numUndef++;
 				if(numUndef == root - 1 && act.playerToken == 'X'){
 					compStrat.numUndef = true;
+					compStrat.posUndef = i;
 				}
 				if(numUndef == root){
 					for(int i = 0; i < root; i++){
@@ -196,6 +218,7 @@ void Game::displayMenu()
 		<< "type [play] to play a game of Tic-Tac-Toe!\n"
 		<< "type [fast play] to play a fast game of Tic-Tac-Toe.\n"
 		<< "type [single] to play a fast game against an easey AI.\n"
+		<< "type [cat] to play a fast game against a challenging AI.\n"
 		<< "Type [victories] to see past victories.\n"
 		<< "type [exit] to exit game.\n";
 }
@@ -445,13 +468,21 @@ void Game::systemCatTurn()
 	}
 	cout << endl;
 	if(turnNum == 2){
+		for(int i = 0; i < root; i++){
+			if(field->spaces[i].linSearch(Space('X')) != -1){
+			compStrat.humanFstX = field->spaces[i].linSearch(Space('X'));
+			compStrat.humanFstY = i;
+			}
+		}
 		catTurnOne();
 	}
 	else if(turnNum == 4){
 		catTurnTwo();
 	}
+	else if(turnNum == 6){
+		catTurnThree();
+	}
 	else{
-		//Must write CatTurnThree(); utilizing the if "Next move" is not owned strategy.
 	move = rand() % numMoves;
 	cout << "Cat chooses: " << availMoves[move] << "\n";
 	cap(availMoves[move] - 48, oh);
@@ -471,8 +502,8 @@ void Game::catTurnOne()
 	for(int i = 0; i < root; i += 2){
 		for(int j = 0; j < root; j += 2){
 			if(field->spaces[i][j].owner == 'X'){
-				compStrat.humanFstY = i;
-				compStrat.humanFstX = j;
+				//compStrat.humanFstY = i;
+				//compStrat.humanFstX = j;
 				compStrat.opener = 'A';
 				corner = true;
 			}
@@ -580,48 +611,74 @@ void Game::catTurnTwo()
 				for(int j = 0; j < root; j += 2){
 					if(field->spaces[1][i].owned == false){
 						field->spaces[1][i].flipSpace('O');
+						compStrat.blkConst = true;
+						compStrat.constBlkd = 1;
 						cout << "\n";
 						if(field->spaces[compStrat.fstPlayY][i].owned == false){
 							compStrat.nextMoveX = i;
 							compStrat.nextMoveY = compStrat.fstPlayY;
+							
 						}
 						else{
 							compStrat.nextMoveX = 2 - i;
 							compStrat.nextMoveY = 2 - compStrat.fstPlayY;
+						}
 						break;
 					}
 					break;
 				}
 			}
 		}
-		else if(compStrat.numUndef){
+		if(compStrat.numUndef){
 			for(int i = 0; i < root; i++){
 				if(field->spaces[i][2].owned == false){
 					cap(8 - root * i, oh);
+					compStrat.blkUndef = true;
+					compStrat.undefBlkd = 2;
+					if(field->spaces[0][0].owned == false){
+						compStrat.nextMoveX = 0;
+						compStrat.nextMoveY = 0;
+					}
+					else{
+						compStrat.nextMoveX = 2;
+						compStrat.nextMoveY = 0;
+					}
 					cout << "\n";
 				}
 			}
 		}
 		//player is moving in line y=x.
 		else if(compStrat.numYeqEx){
-			//not a good idea, but valid.
+			compStrat.blkYeEx = true;
+			//check/cap available space in line y = x.
 			if(compStrat.fstPlayY == 0 && compStrat.fstPlayX == 2){
 				cap(7, oh);
+				compStrat.nextMoveX = 0;
+				compStrat.nextMoveY = 1;
 			}
 			else if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 0){
 				cap(3, oh);
+				compStrat.nextMoveX = 1;
+				compStrat.nextMoveY = 2;
 			}
 			else{
 				if(field->spaces[2][0].owned == false){
 					cap(1, oh);
+					compStrat.nextMoveX = 2;
+					compStrat.nextMoveY = 2;
 				}
 				else
+				{
 					cap(9, oh);
+					compStrat.nextMoveX = 0;
+					compStrat.nextMoveY = 0;
+				}
 			}
 		}
 		//The player is moving in line -y=x
 		else if(compStrat.numOpYeX){
-			//Foolish, but valid.
+			compStrat.blkOpYeX = true;
+			//Check/cap available space in line y = -x.
 			if(compStrat.fstPlayY == 2 && compStrat.fstPlayX == 2){
 				cap(6, oh);
 			}
@@ -641,7 +698,11 @@ void Game::catTurnTwo()
 
 	if(compStrat.opener == 'A'){
 		//If the player started in a corner and is going diagonal left to right
+		//The player is attempting to fork the game, take an edge to block one
+		//fork now.
 		if(compStrat.numOpYeX == true){
+			//This line is now blocked.
+			compStrat.blkOpYeX = true;
 			oneD4.roll();
 			cap(oneD4.checkDie() * 2, oh);
 			cout << "\n";
@@ -666,6 +727,8 @@ void Game::catTurnTwo()
 		}
 		//Now to check y = x.
 		if(compStrat.numYeqEx == true){
+			//This line is now blocked.
+			compStrat.blkYeEx = true;
 			oneD4.roll();
 			cap(oneD4.checkDie() * 2, oh);
 			cout << "\n";
@@ -692,6 +755,8 @@ void Game::catTurnTwo()
 		if(compStrat.numUndef == true){
 			for(int j = 0; j < root; j++){
 				if(field->spaces[j][compStrat.humanFstX].owned == false){
+					compStrat.blkUndef = true;
+					compStrat.undefBlkd = compStrat.humanFstX;
 					cap((7 - root * j) + compStrat.humanFstX, oh);
 					compStrat.nextMoveX = 2 - compStrat.humanFstX;
 					compStrat.nextMoveY = j;
@@ -702,18 +767,13 @@ void Game::catTurnTwo()
 		if(compStrat.numConst){
 			for(int j = 0; j < root; j++){
 				if(field->spaces[compStrat.humanFstY][j].owned == false){
+					compStrat.blkConst = true;
+					compStrat.constBlkd = compStrat.humanFstY;
 					cap((7 - compStrat.humanFstY * root) + j, oh);
 					compStrat.nextMoveX = 2 - j;
 					compStrat.nextMoveY = 2 - compStrat.humanFstY;
 				}
 			}
-		}
-		else{
-			if(field->spaces[1][0].owned == false){
-				cap(4, oh);
-			}
-			else
-				cap(6, oh);
 		}
 	}
 	//Need to check for players who started on the edges.
@@ -721,22 +781,56 @@ void Game::catTurnTwo()
 		//player is attempting to capture in line with undefined slope.
 		if(compStrat.numUndef){
 			for(int i = 0; i < root; i++){
-				if(field->spaces[i].linSearch(Space('X')) != -1){
-					int col = i;
-					for(int row = 0; row < root; row++){
-						if(field->spaces[row][col].owned == false)
-							cap((7 - row * root) + col, oh);
-						break;
+				if(field->spaces[i].linSearch(Space('X')) == -1){
+					//We know that the undefined line first marked by x is now blocked.
+					compStrat.blkUndef = true;
+					compStrat.undefBlkd = compStrat.humanFstX;
+					if(field->spaces[i][compStrat.humanFstX].owned == false){
+					cap((7 - i * root) + compStrat.humanFstX, oh);
+					compStrat.nextMoveY = i;
+					compStrat.nextMoveX = (compStrat.humanFstX + 1) % 3;
+					}
+					else{
+						oneD4.roll();
+						switch(oneD4.checkDie()){
+							case 1:
+								cap(7, oh);
+								compStrat.nextMoveX = 2;
+								compStrat.nextMoveY = 2;
+								break;
+							case 2:
+								cap(9, oh);
+								compStrat.nextMoveX = 0;
+								compStrat.nextMoveY = 2;
+								break;
+							case 3:
+								cap(1, oh);
+								compStrat.nextMoveX = 2;
+								compStrat.nextMoveY = 0;
+								break;
+							case 4:
+								cap(3, oh);
+								compStrat.nextMoveX = 0;
+								compStrat.nextMoveY = 0;
+								break;
+							default:
+								cout << "Cat says, \"I think my d 4 is broken :C.\"\n"
+									<< "Error catTurnTwo, case C.\n";
+								break;
+						}
 					}
 				}
 			}
 		}
 		//The player is attempting to complete three accross.
-		if(compStrat.numConst == true){
+		if(compStrat.numConst){
 			for(int i = 0; i < root; i++){
 				//Cat only needs to check those searchable rows containing spaces
 				//Captured by x. To trip numConst flag, both x's will be in a row.
 				if(field->spaces[i].linSearch(Space('X')) != -1){
+					//Now line y = i is blocked.
+					compStrat.blkConst = true;
+					compStrat.constBlkd = i;
 					for(int j = 0; j < root; j++){
 						if(field->spaces[i][j].owned == false){
 							cap((7 - root * i) + j, oh);
@@ -751,7 +845,81 @@ void Game::catTurnTwo()
 
 void Game::catTurnThree()
 {
+	bool goodIndex = false;
+	bool capd = false;
+	int move;
 
+	//Ignore blocked lines with two player marks.
+	if(compStrat.blkYeEx)
+		compStrat.numYeqEx = false;
+	if(compStrat.blkOpYeX)
+		compStrat.numOpYeX = false;
+	do{
+		try{
+			//Move in to victory or take next move.
+			if(field->spaces[compStrat.nextMoveY][compStrat.nextMoveX].owned == false){
+				cap((7 - compStrat.nextMoveY * root) + compStrat.nextMoveX, oh);
+				capd = true;
+			}
+			goodIndex = true;	
+		}
+		catch(ObjectRow<Space>::OutOfBounds err){
+			if(err.getDir()){
+				compStrat.nextMoveY--;
+				compStrat.nextMoveX--;
+			}
+			else{
+				compStrat.nextMoveY++;
+				compStrat.nextMoveX++;
+			}
+
+		}
+	}while(goodIndex == false);
+	if(capd == false){
+		//Check for threats from the player.
+		if(compStrat.numYeqEx && compStrat.blkYeEx == false){
+			//This is not a false alarm. player threatens y = x.
+			for(int row = 2, col = 0; col < root; row--, col++){
+				if(field->spaces[row][col].owned == false){
+					cap((7 - row * root) + col, oh);
+					capd = true;
+				}
+			}
+		}
+		if(compStrat.numOpYeX && compStrat.blkOpYeX == false){
+			//Player threatens y = -x.
+			for(int i = 0; i < root; i++){
+				if(field->spaces[i][i].owned == false){
+					cap((7 - i * root) + i, oh);
+					capd = true;
+				}
+			}
+		}
+		if(compStrat.numConst && compStrat.constBlkd != compStrat.posConst){
+			for(int i = 0; i < root; i++){
+				if(field->spaces[compStrat.posConst][i].owned == false){
+					cap((7 - compStrat.posConst * root) + i, oh);
+					capd = true;
+				}
+				else{
+					cap(availMoves[rand() % numMoves], oh);
+					capd = true;
+				}
+			}
+		}
+		if(compStrat.numUndef && compStrat.undefBlkd != compStrat.posUndef){
+			for(int i = 0; i < root; i++){
+				if(field->spaces[i][compStrat.posUndef].owned == false){
+					cap((7 - i * root) + compStrat.posUndef, oh);
+					capd = true;
+				}
+			}
+		}
+		else if(capd == false){
+			move = rand() % numMoves;
+			cap(availMoves[move], oh);
+		}
+	}
 }
 
 bool Game::validateMove(char move)
@@ -819,7 +987,7 @@ void Game::play()
 				<< "first one is \"n\" to see the next entry.\n"
 				<< "	->Option Details<-\n"
 				<< "In the main menu, you have the option for this message, rules, play, fast play,\n"
-				<< "derp, victories, and exit. Here's a quick description of each.\n"
+				<< "single, cat, victories, and exit. Here's a quick description of each.\n"
 				<< "rules:	This option gives you a simple run down of the rules of tic-tac-toe and\n"
 				<< "	how to select a space for capture during game play in either play or\n"
 				<< "	fastplay modes.\n"
@@ -831,11 +999,14 @@ void Game::play()
 				<< "	This option allows you and an opponent to play a fast game of \n"
 				<< "	tic-tac-toe. Names do not need to be entered and the board will not be\n"
 				<< "	saved when a player wins.\n"
-				<< "derp:\n"
+				<< "single:\n"
 				<< "	This option is a low dificulty one player game; the system is player Oh\n"
 				<< "	whom will chose it's moves randomly... so you can't be sure if you will\n"
 				<< "	win or get a cat's game.\n"
-				<< "Victories:\n"
+				<< "cat:\n"
+				<< "	This option is a more difficult one player game; the system is\n"
+				<< "	player oh who will actively try to block you.\n"
+				<< "victories:\n"
 				<< "	This option allows you to view saved victoriesin the following format:\n"
 				<< "	Winner: Beck	<-- This is the name of the winning player.\n"
 				<< "	Who's Board looked like:\n"

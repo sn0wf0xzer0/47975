@@ -16,7 +16,8 @@ private:
 	int rightPos;		//Keeps track of the element position when printing board.
 	int downPos;		//Keeps track of the element position when printing board.
 protected:
-	SearchableRow<Space> *spaces;
+	SearchableRow<Space> *spaces;	//Spaces now stored in a dynamic array of SearchableRow<Space>
+									//Template objects.
 	//Space **spaces;		//pointer to two dimensional dynamic array of space objects.
 public:
 	Board();						

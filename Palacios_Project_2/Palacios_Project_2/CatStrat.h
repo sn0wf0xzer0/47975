@@ -15,6 +15,14 @@ struct CatStrat
 	bool numYeqEx;
 	bool numConst;
 	bool numUndef;
+	bool blkOpYeX;
+	bool blkYeEx;
+	bool blkConst;
+	bool blkUndef;
+	int constBlkd;
+	int undefBlkd;
+	int posConst;
+	int posUndef;
 	int humanFstX;
 	int humanFstY;
 	int fstPlayX;

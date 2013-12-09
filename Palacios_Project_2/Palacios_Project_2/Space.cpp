@@ -35,7 +35,7 @@ void Space::flipSpace(char token)
 bool Space::operator ==(const Space &right)
 {
 	bool flag;
-	if (owner == right.owner/* && owned == right.owned*/){
+	if (owner == right.owner){
 		flag = true;
 	}
 	else
